@@ -18,20 +18,26 @@ class App extends React.Component {
     ]
   }
 
+  deleteTask = id => {
+    this.setState({
+      tasks: this.state.tasks.filter(task => task.id !== id)
+    });
+  }
+
   render() {
     const { tasks } = this.state;
     return (
       <div className="app">
-        <div class="logo">
+        <div className="logo">
           <img src={logo} alt="logo"/>
           <h1>Task List</h1>
         </div>
-        <div class="list">
+        <div className="list">
           {tasks.map(task => 
-            <TodoItem key={task.id} todo={task}/>
+            <TodoItem key={task.id} todo={task} del={this.deleteTask}/>
           )}
         </div>
-        <div class="input-form">
+        <div className="input-form">
           <FormInput/>
         </div>
       </div>
