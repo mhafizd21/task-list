@@ -1,0 +1,25 @@
+.btn {
+  min-width: 50px;
+  height: 36px;
+  margin: 0 4px;
+  border: none;
+  color: #FFFFFF;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.btn-success {
+  background: #00A44E;
+}
+
+.btn-danger {
+  background: #FF2060;
+}
+
+.btn-primary {
+  background: #089C99;
+}
