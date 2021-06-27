@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from './Button';
+import PropTypes from 'prop-types'
 
 const TodoItem = ({ todo }) => {
   return(
@@ -11,6 +12,10 @@ const TodoItem = ({ todo }) => {
       </div>
     </div>
   );
+}
+
+TodoItem.propTypes = {
+  todo: PropTypes.object.isRequired
 }
 
 export default TodoItem;
