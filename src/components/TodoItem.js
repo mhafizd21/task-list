@@ -2,7 +2,7 @@ import React from 'react';
 import Button from './Button';
 import PropTypes from 'prop-types'
 
-const TodoItem = ({ todo, del }) => {
+const TodoItem = ({ todo, del, edit }) => {
   const delById = id => {
     del(id);
   }
@@ -11,7 +11,7 @@ const TodoItem = ({ todo, del }) => {
     <div style={todoItem}>
       <p>{todo.title}</p>
       <div>
-        <Button text="edit" variant="success"/>
+        <Button text="edit" variant="success" action={() => edit(todo.id, todo.title)}/>
         <Button text="delete" variant="danger" action={() => delById(todo.id)}/>
       </div>
     </div>

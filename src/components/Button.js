@@ -4,7 +4,7 @@ import '../styles/Button.css';
 
 const Button = ({ variant, text, action }) => {
   return(
-    <button className={`btn btn-${variant}`} onClick={action}>{text}</button>
+    <button className={`btn btn--${variant}`} onClick={action}>{text}</button>
   );
 }
 

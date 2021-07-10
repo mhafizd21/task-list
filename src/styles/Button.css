@@ -12,14 +12,14 @@
   outline: none;
 }
 
-.btn-success {
+.btn--success {
   background: #00A44E;
 }
 
-.btn-danger {
+.btn--danger {
   background: #FF2060;
 }
 
-.btn-primary {
+.btn--primary {
   background: #089C99;
 }
