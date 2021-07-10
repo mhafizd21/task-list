@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import FormInput from './components/FormInput';
 import TodoItem from './components/TodoItem';
 import ModalEdit from './components/ModalEdit';
+import ModalDelete from './components/ModalDelete';
 import './App.css';
 
 class App extends React.Component {
@@ -18,6 +19,7 @@ class App extends React.Component {
       }
     ],
     isEdit: false,
+    isDelete: false,
     editData: {
       id: "",
       title: ""
@@ -26,7 +28,12 @@ class App extends React.Component {
 
   deleteTask = id => {
     this.setState({
-      tasks: this.state.tasks.filter(task => task.id !== id)
+      tasks: this.state.tasks.filter(task => task.id !== id),
+      isDelete: false,
+      editData: {
+        id: "",
+        title: ""
+      }
     });
   }
 
@@ -42,19 +49,49 @@ class App extends React.Component {
     });
   }
 
-  openModal = (id, data) => {
+  openModal = (type, id, data) => {
+    let modalEdit = this.state.isEdit;
+    let modalDelete = this.state.isDelete;
+    switch(type){
+      case 'edit':
+        modalEdit = true
+        break;
+      case 'delete':
+        modalDelete = true
+        break;
+      default:
+        break;
+    }
     this.setState({
-      isEdit: true,
+      isEdit: modalEdit,
+      isDelete: modalDelete,
       editData: {
         id,
         title: data
       }
-    })
-  } 
+    });
+  }
 
-  closeModal = () => {
+  closeModal = type => {
+    let modalEdit = this.state.isEdit;
+    let modalDelete = this.state.isDelete;
+    switch(type){
+      case 'edit':
+        modalEdit = false;
+        break;
+      case 'delete':
+        modalDelete = false;
+        break;
+      default:
+        break;
+    }
     this.setState({
-      isEdit: false
+      isEdit: modalEdit,
+      isDelete: modalDelete,
+      editData: {
+        id: "",
+        title: ""
+      }
     })
   }
 
@@ -93,7 +130,7 @@ class App extends React.Component {
         </div>
         <div className="list">
           {tasks.map(task => 
-            <TodoItem key={task.id} todo={task} del={this.deleteTask} edit={this.openModal}/>
+            <TodoItem key={task.id} todo={task} modal={this.openModal}/>
           )}
         </div>
         <div className="input-form">
@@ -105,6 +142,12 @@ class App extends React.Component {
           edit={this.setTitle}
           data={this.state.editData}
           update={this.updateData}
+        />
+        <ModalDelete 
+          modalState={this.state.isDelete} 
+          close={this.closeModal} 
+          data={this.state.editData}
+          del={this.deleteTask}
         />
       </div>
     );

@@ -4,7 +4,8 @@ import '../styles/Modal.css';
 
 class ModalEdit extends React.Component {
   render() {
-    const { modalState, close, data, edit, update } = this.props;
+    const { modalState, close, data, del } = this.props;
+    const delById = id => del(id)
 
     if (!modalState) {
       return null;
@@ -14,15 +15,19 @@ class ModalEdit extends React.Component {
       <div className="modal__container">
         <div className="modal">
           <div className="modal__header">
-            <h3 className="modal__title"> Edit Task </h3>
+            <h3 className="modal__title"> Delete Task</h3>
           </div>
           <div className="modal__body">
-            <input type="text" value={data.title} onChange={edit}/>
-          </div> 
+            <p> 
+              Delete
+              <span>{" "}"{data.title}"{" "} </span>
+              from list ?
+            </p>
+          </div>
           <div className="modal__footer">
             <div className="btn__group">
-              <Button variant="danger" text="Cancel" action={() => close('edit')}/>
-              <Button variant="success" text="Edit" action={update}/>
+              <Button variant="danger" text="Cancel" action={() => close('delete')}/>
+              <Button variant="success" text="Delete" action={() => delById(data.id)}/>
             </div>
           </div>
         </div>
