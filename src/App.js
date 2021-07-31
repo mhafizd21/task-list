@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import FormInput from './components/FormInput';
 import TodoItem from './components/TodoItem';
@@ -6,52 +6,48 @@ import ModalEdit from './components/ModalEdit';
 import ModalDelete from './components/ModalDelete';
 import './App.css';
 
-class App extends React.Component {
-  state = {
-    tasks: [
-      {
-        id: 1,
-        title: "Daily Scrum"
-      },
-      {
-        id: 2,
-        title: "Sprint Planning"
-      }
-    ],
-    isEdit: false,
-    isDelete: false,
-    editData: {
+const App = () => {
+  const [tasks , setTasks ] = useState([
+    {
+      id: 1,
+      title: "Daily Scrum"
+    },
+    {
+      id: 2,
+      title: "Sprint Planning"
+    }
+  ]);
+
+  const [isEdit, setIsEdit] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
+  const [editData, setEditData] = useState({
+    id: "",
+    title: ""
+  });
+
+  const deleteTask = id => {
+    setTasks(tasks.filter(task => task.id !== id));
+    setIsDelete(false);
+    setEditData({
       id: "",
       title: ""
-    }
-  }
-
-  deleteTask = id => {
-    this.setState({
-      tasks: this.state.tasks.filter(task => task.id !== id),
-      isDelete: false,
-      editData: {
-        id: "",
-        title: ""
-      }
     });
-  }
+  };
 
-  addTask = data => {
-    const currId = this.state.tasks.length;
+  const addTask = data => {
+    const currId = tasks.length;
 
     const newTask = {
       id: currId + 1,
       title: data
     }
-    this.setState({
-      tasks: [...this.state.tasks, newTask]
-    });
-  }
 
-  openModal = (type, id, data) => {
-    let modalEdit = this.state.isEdit;
-    let modalDelete = this.state.isDelete;
+    setTasks([...tasks, newTask]);
+  };
+
+  const openModal = (type, id, data) => {
+    let modalEdit = isEdit;
+    let modalDelete = isDelete;
     switch(type){
       case 'edit':
         modalEdit = true
@@ -62,19 +58,19 @@ class App extends React.Component {
       default:
         break;
     }
-    this.setState({
-      isEdit: modalEdit,
-      isDelete: modalDelete,
-      editData: {
-        id,
-        title: data
-      }
-    });
-  }
 
-  closeModal = type => {
-    let modalEdit = this.state.isEdit;
-    let modalDelete = this.state.isDelete;
+    setIsDelete(modalDelete);
+    setIsEdit(modalEdit);
+    setEditData({
+      id,
+      title: data
+    });
+
+  };
+
+  const closeModal = type => {
+    let modalEdit = isEdit;
+    let modalDelete = isDelete;
     switch(type){
       case 'edit':
         modalEdit = false;
@@ -85,73 +81,65 @@ class App extends React.Component {
       default:
         break;
     }
-    this.setState({
-      isEdit: modalEdit,
-      isDelete: modalDelete,
-      editData: {
-        id: "",
-        title: ""
-      }
-    })
+
+    setIsEdit(modalEdit);
+    setIsDelete(modalDelete);
+    setEditData({
+      id: "",
+      title: ""
+    });
   }
 
-  setTitle = e => {
-    this.setState({
-      editData: {
-        ...this.state.editData,
-        title: e.target.value
-      }
-    })
+  const setTitle = e => {
+    setEditData({
+      ...editData,
+      title: e.target.value
+    });
   }
 
-  updateData = () => {
-    const { id:newId, title:newTitle} = this.state.editData;
-    const currTasks = this.state.tasks;
+  const updateData = () => {
+    const { id:newId, title:newTitle} = editData;
+    const currTasks = tasks;
     const selectedIdx = currTasks.findIndex(task => task.id === newId);
     currTasks[selectedIdx].title = newTitle;
 
-    this.setState({
-      tasks: currTasks,
-      isEdit: false,
-      editData: {
-        id: "",
-        title: ""
-      }
-    })
+    setTasks(currTasks);
+    setIsEdit(false);
+    setEditData({
+      id: "",
+      title: ""
+    });
   }
 
-  render() {
-    const { tasks } = this.state;
-    return (
-      <div className="app">
-        <div className="logo">
-          <img src={logo} alt="logo"/>
-          <h1>Task List</h1>
-        </div>
-        <div className="list">
-          {tasks.map(task => 
-            <TodoItem key={task.id} todo={task} modal={this.openModal}/>
-          )}
-        </div>
-        <div className="input-form">
-          <FormInput add={this.addTask}/>
-        </div>
-        <ModalEdit 
-          modalState={this.state.isEdit} 
-          close={this.closeModal} 
-          edit={this.setTitle}
-          data={this.state.editData}
-          update={this.updateData}
-        />
-        <ModalDelete 
-          modalState={this.state.isDelete} 
-          close={this.closeModal} 
-          data={this.state.editData}
-          del={this.deleteTask}
-        />
+  return (
+    <div className="app">
+      <div className="logo">
+        <img src={logo} alt="logo"/>
+        <h1>Task List</h1>
       </div>
-    );
-  }
+      <div className="list">
+        {tasks.map(task => 
+          <TodoItem key={task.id} todo={task} modal={openModal}/>
+        )}
+      </div>
+      <div className="input-form">
+        <FormInput add={addTask}/>
+      </div>
+      <ModalEdit 
+        modalState={isEdit} 
+        close={closeModal} 
+        edit={setTitle}
+        data={editData}
+        update={updateData}
+      />
+      <ModalDelete 
+        modalState={isDelete} 
+        close={closeModal} 
+        data={editData}
+        del={deleteTask}
+      />
+    </div>
+  );
 }
 
 export default App;

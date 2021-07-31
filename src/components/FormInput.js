@@ -1,34 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from './Button';
 import '../styles/FormInput.css';
 
-class FormInput extends React.Component {
+const FormInput = props => {
+  const [text, setText] = useState("");
 
-  state = {
-    text: ""
+  const change = e => {
+    setText(e.target.value);
   }
 
-  change = e => {
-    this.setState({text: e.target.value});
-  }
-
-  submit = e => {
+  const submit = e => {
     e.preventDefault();
-    if (this.state.text !== "") {
-      this.props.add(this.state.text);
+    if(text !== "") {
+      props.add(text);
     }
 
-    this.setState({text:""});
+    setText("");
   }
 
-  render() {
-    return (
-      <form style={formInput} onSubmit={this.submit}>
-        <input type="text" style={inputText} placeholder="Add Item Here" onChange={this.change} value={this.state.text}/>
-        <Button text="add" variant="primary" action={this.submit}/>
-      </form>
-    )
-  }
+  return (
+    <form style={formInput} onSubmit={submit}>
+      <input type="text" style={inputText} placeholder="Add Item Here" onChange={change} value={text}/>
+      <Button text="add" variant="primary" action={submit}/>
+    </form>
+  )
+
 }
 
 export default FormInput;
